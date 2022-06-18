@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -47,7 +47,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\LikeUser');
     }
 
-    /**
+/**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
