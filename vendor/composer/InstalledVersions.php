@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => '19e1246277296f70cc08978eb69a522b3dfb19bc',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -453,12 +453,12 @@ private static $installed = array (
     ),
     'laravel/laravel' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => '19e1246277296f70cc08978eb69a522b3dfb19bc',
     ),
     'laravel/sail' => 
     array (
@@ -507,12 +507,12 @@ private static $installed = array (
     ),
     'lcobucci/jwt' => 
     array (
-      'pretty_version' => '4.1.5',
-      'version' => '4.1.5.0',
+      'pretty_version' => '4.0.4',
+      'version' => '4.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'fe2d89f2eaa7087af4aa166c6f480ef04e000582',
+      'reference' => '55564265fddf810504110bd68ca311932324b0e9',
     ),
     'league/commonmark' => 
     array (
@@ -655,6 +655,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '4f7fd7836c6f332bb2933569e566a0d6c4cbed74',
+    ),
+    'php-open-source-saver/jwt-auth' => 
+    array (
+      'pretty_version' => '1.4.2',
+      'version' => '1.4.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '5fd8c185453d875835c24d4ce50be7396af6ae14',
     ),
     'phpdocumentor/reflection-common' => 
     array (
@@ -1374,16 +1383,6 @@ private static $installed = array (
       array (
       ),
       'reference' => 'da444caae6aca7a19c0c140f68c6182e337d5b1c',
-    ),
-    'tymon/jwt-auth' => 
-    array (
-      'pretty_version' => 'dev-develop',
-      'version' => 'dev-develop',
-      'aliases' => 
-      array (
-        0 => '1.0.x-dev',
-      ),
-      'reference' => '014be8d493d228d14bbc291b24e835d330c092a0',
     ),
     'vlucas/phpdotenv' => 
     array (
