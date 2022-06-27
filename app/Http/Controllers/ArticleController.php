@@ -18,7 +18,7 @@ class ArticleController extends Controller
             return $query->limit($limit);
         })
         ->where('publish', 'yes')->with('kategori', 'penulis', 'view')
-        ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+        // ->select('id', 'judul', 'slug', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
         ->withCount('like as jumlah_like')
         ->get();
 
@@ -85,7 +85,7 @@ class ArticleController extends Controller
 
         $data = Article::orderBy('id', 'desc')
             ->with('kategori', 'penulis')
-            ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+            // ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
             ->withCount('like as jumlah_like')
             ->withSum('view as jumlah_view', 'jumlah')
             ->where('publish', 'yes')
@@ -102,7 +102,7 @@ class ArticleController extends Controller
 
         $data = Article::whereIn('id', $rekomendasi)
             ->with('kategori', 'penulis')
-            ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+            // ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
             ->withCount('like as jumlah_like')
             ->withSum('view as jumlah_view', 'jumlah')
             ->where('publish', 'yes')

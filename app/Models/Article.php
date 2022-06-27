@@ -59,4 +59,8 @@ class Article extends Model
         }
     }
 
+    // public function getSlugArtikelAttribute(){
+    //     return $this->slug;
+    // }
+
 }
