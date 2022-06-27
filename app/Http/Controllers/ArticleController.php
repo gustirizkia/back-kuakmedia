@@ -13,11 +13,15 @@ class ArticleController extends Controller
     public function list(Request $request){
 
         $limit = $request->limit;
+        $kategori = $request->kategori_id;
 
         $data = Article::when($limit, function($query) use ($limit){
             return $query->limit($limit);
         })
         ->where('publish', 'yes')->with('kategori', 'penulis', 'view')
+        ->when($kategori, function($query)use($kategori){
+            return $query->where('category_id', $kategori);
+        })
         // ->select('id', 'judul', 'slug', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
         ->withCount('like as jumlah_like')
         ->get();
