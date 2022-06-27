@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\RekomendasiAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -16,8 +17,9 @@ class ArticleController extends Controller
         $data = Article::when($limit, function($query) use ($limit){
             return $query->limit($limit);
         })
-        ->where('publish', 'yes')->with('kategori', 'penulis')
+        ->where('publish', 'yes')->with('kategori', 'penulis', 'view')
         ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+        ->withCount('like as jumlah_like')
         ->get();
 
         return response()->json([
@@ -73,5 +75,42 @@ class ArticleController extends Controller
             'status' => 'success',
             'data' => $create
         ], 201);
+    }
+
+    public function terbaru(Request $request, $limit = 6){
+
+        if($request->limit){
+            $limit = $request->limit;
+        }
+
+        $data = Article::orderBy('id', 'desc')
+            ->with('kategori', 'penulis')
+            ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+            ->withCount('like as jumlah_like')
+            ->withSum('view as jumlah_view', 'jumlah')
+            ->where('publish', 'yes')
+            ->limit($limit)->get();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+    }
+
+    public function rekomendasi(){
+        $rekomendasi = RekomendasiAdmin::orderBy('id', 'desc')->get()->pluck('article_id');
+
+        $data = Article::whereIn('id', $rekomendasi)
+            ->with('kategori', 'penulis')
+            ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+            ->withCount('like as jumlah_like')
+            ->withSum('view as jumlah_view', 'jumlah')
+            ->where('publish', 'yes')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ]);
     }
 }

@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LikeUser>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RekomendasiAdmin>
  */
-class LikeUserFactory extends Factory
+class RekomendasiAdminFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,8 +17,7 @@ class LikeUserFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->numberBetween($min = 1, $max = 20),
-            'article_id' => $this->faker->numberBetween($min = 1, $max = 26),
+            'article_id' => $this->faker->numberBetween($min = 1, $max = 12),
         ];
     }
 }

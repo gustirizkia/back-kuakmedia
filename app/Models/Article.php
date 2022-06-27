@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Facades\DB;
 
 class Article extends Model
 {
@@ -24,6 +25,8 @@ class Article extends Model
         ];
     }
 
+    protected $appends = ['jumlah_share'];
+
     protected $guarded = [];
 
     public function kategori(){
@@ -37,4 +40,23 @@ class Article extends Model
     public function komentar(){
         return $this->hasMany('App\Models\Komentar');
     }
+
+    public function view(){
+        return $this->hasMany('App\Models\LihatArtikel');
+    }
+
+    public function like(){
+        return $this->hasMany('App\Models\LikeUser');
+    }
+
+    public function getJumlahShareAttribute(){
+        $data = ShareArticle::where('article_id', $this->id)
+            ->select(DB::raw("sum(jumlah) as total"))->first();
+        if($data->total){
+            return $data->total;
+        }else{
+            return 0;
+        }
+    }
+
 }

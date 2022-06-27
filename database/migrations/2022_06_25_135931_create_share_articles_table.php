@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('like_articles', function (Blueprint $table) {
+        Schema::create('share_articles', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('article_id');
+            $table->string('platform')->nullable();
+            $table->bigInteger('jumlah');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('like_articles');
+        Schema::dropIfExists('share_articles');
     }
 };
