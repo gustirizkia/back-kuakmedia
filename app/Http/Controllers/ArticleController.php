@@ -45,7 +45,7 @@ class ArticleController extends Controller
             ], 422);
         }
 
-        $data = Article::with('komentar.user')->where('slug', $request->slug)->first();
+        $data = Article::with('komentar.user', 'penulis')->where('slug', $request->slug)->first();
 
         return response()->json([
             'status' => 'success',
