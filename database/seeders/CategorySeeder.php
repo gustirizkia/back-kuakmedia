@@ -50,11 +50,7 @@ class CategorySeeder extends Seeder
             'sub_judul' => $Estetika->id
         ]);
         $subEstetika = Category::create([
-            'nama' => 'Tafsir',
-            'sub_judul' => $Estetika->id
-        ]);
-        $subEstetika = Category::create([
-            'nama' => 'Sastra',
+            'nama' => 'Tafsir Sastra',
             'sub_judul' => $Estetika->id
         ]);
 
