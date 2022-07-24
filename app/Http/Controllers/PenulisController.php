@@ -35,7 +35,7 @@ class PenulisController extends Controller
         'data' => $data
       ]);
     }
-    public function penulsiProduktif(){
+    public function penulisProduktif(){
       $data = User::withCount('artikel')
         ->has('artikel')
         ->orderBy('artikel_count', 'desc')
