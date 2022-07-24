@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PenulisController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,5 +39,13 @@ Route::post('artikel/create', [ArticleController::class, 'create'])->middleware(
 Route::get('artikel/like', [LikeController::class, 'likeArticle'])->middleware('auth:api');
 Route::get('artikel/terbaru', [ArticleController::class, 'terbaru']);
 Route::get('artikel/rekomendasi', [ArticleController::class, 'rekomendasi']);
+Route::get('artikel/saya', [ArticleController::class, 'artikelSaya'])->middleware('auth:api');
+Route::get('artikel/keresahaan', [ArticleController::class, 'artikelKeresahan']);
 
+Route::get('sekutu/terbaru', [PenulisController::class, 'sekutuTerbaru']);
+Route::get('sekutu/produktif', [PenulisController::class, 'palingProduktif']);
+Route::get('user/search', [PenulisController::class, 'cari']);
+Route::get('sekutu/detail', [PenulisController::class, 'detailPenulis']);
 
+Route::get('penulis/terbaru', [PenulisController::class, 'penulsiTerbaru']);
+Route::get('penulis/produktif', [PenulisController::class, 'penulisProduktif']);
