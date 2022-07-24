@@ -4,16 +4,66 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\RekomendasiAdmin;
+use App\Models\Keresahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    public function artikelSaya()
+    {
+      // $data = Article::where('user_id', auth()->user()->id)
+      // ->select('id', 'slug', 'judul', 'updated_at as tanggal_dipublish', 'publish')
+      // ->get();
+
+      $data = Article::where('user_id', auth()->user()->id)
+          ->with('kategori', 'penulis')
+          // ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+          ->withCount('like as jumlah_like')
+          ->withSum('view as jumlah_view', 'jumlah')
+          ->where('publish', 'yes')
+          ->get();
+
+      return response()->json([
+        'status' => 'success',
+        'data' => $data
+      ]);
+    }
+
+    public function artikelKeresahan(Request $request){
+      $limit = 4;
+      if($request->limit){
+          $limit = $request->limit;
+      }
+
+      $keresahan = Keresahan::get()->pluck('article_id');
+
+      $data = Article::whereIn('id', $keresahan)
+          ->when($limit, function($query)use($limit){
+              return $query->limit($limit);
+          })
+          ->with('kategori', 'penulis')
+          ->withCount('like as jumlah_like')
+          ->withSum('view as jumlah_view', 'jumlah')
+          ->where('publish', 'yes')
+          ->get();
+
+        return response()->json([
+          'status' => 'success',
+          'data' => $data
+        ]);
+    }
+
     public function list(Request $request){
 
-        $limit = $request->limit;
+        $limit = 12;
+        if($request->limit){
+            $limit = $request->limit;
+        }
+
         $kategori = $request->kategori_id;
+        $keyword = $request->keyword;
 
         $data = Article::when($limit, function($query) use ($limit){
             return $query->limit($limit);
@@ -22,8 +72,12 @@ class ArticleController extends Controller
         ->when($kategori, function($query)use($kategori){
             return $query->where('category_id', $kategori);
         })
-        // ->select('id', 'judul', 'slug', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
+        ->when($keyword, function($query)use($keyword){
+            return $query->where('judul', "LIKE", "%$keyword%");
+        })
+        ->with('kategori', 'penulis')
         ->withCount('like as jumlah_like')
+        ->withSum('view as jumlah_view', 'jumlah')
         ->get();
 
         return response()->json([

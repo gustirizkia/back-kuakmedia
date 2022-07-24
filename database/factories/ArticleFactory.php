@@ -23,7 +23,7 @@ class ArticleFactory extends Factory
         $slug = Str::slug($title, '-');
         return [
             'user_id' => $this->faker->numberBetween($min = 1, $max = 20),
-            'category_id' => $this->faker->numberBetween($min = 1, $max = 14),
+            'category_id' => $this->faker->numberBetween($min = 1, $max = 13),
             'image' => $this->faker->imageUrl($width = 640, $height = 480),
             'judul' => $title,
             'body' => $this->faker->realText($maxNbChars = 1000, $indexSize = 2),

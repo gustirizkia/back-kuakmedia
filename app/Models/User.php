@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use DB;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -34,6 +35,14 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    protected $appends = ['total_blog'];
+
+    public function getTotalBlogAttribute(){
+      $data = DB::table('articles')->where('user_id', $this->id)->count();
+
+      return $data;
+    }
+
     /**
      * The attributes that should be cast.
      *
@@ -45,6 +54,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function like(){
         return $this->hasMany('App\Models\LikeUser');
+    }
+
+    public function artikel(){
+      return $this->hasMany('App\Models\Article');
     }
 
 /**

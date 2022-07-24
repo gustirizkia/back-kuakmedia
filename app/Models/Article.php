@@ -25,7 +25,7 @@ class Article extends Model
         ];
     }
 
-    protected $appends = ['jumlah_share'];
+    protected $appends = ['jumlah_share', 'status'];
 
     protected $guarded = [];
 
@@ -56,6 +56,15 @@ class Article extends Model
             return $data->total;
         }else{
             return 0;
+        }
+    }
+    public function getStatusAttribute(){
+        if($this->publish === "draft"){
+          return "pending";
+        }elseif($this->publish === "yes"){
+          return "published";
+        }else{
+          return "failed";
         }
     }
 

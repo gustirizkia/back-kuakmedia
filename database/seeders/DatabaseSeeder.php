@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\LihatArtikel::factory(30)->create();
         \App\Models\ShareArticle::factory(120)->create();
         \App\Models\RekomendasiAdmin::factory(12)->create();
+        \App\Models\Keresahan::factory(12)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
