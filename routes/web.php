@@ -34,5 +34,9 @@ Route::prefix('admin')->group(function () {
    Route::get('/', function(){
     return view('pages.index');
    });
-   Route::resource('artikel', ArtikelController::class);
+   Route::resource('artikel', ArtikelController::class)->middleware('admin');
 });
+
+Route::get('tester', function(){
+    return "OK";
+})->middleware('admin');
