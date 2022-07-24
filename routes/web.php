@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ArtikelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+Route::prefix('admin')->group(function () {
+   Route::get('/', function(){
+    return view('pages.index');
+   });
+   Route::resource('artikel', ArtikelController::class);
 });
