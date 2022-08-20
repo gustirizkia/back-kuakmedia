@@ -1,13 +1,16 @@
 @extends('layouts.dashboard')
 
 @section('title')
-Manajemen Artikel
+Artikel
 @endsection
 
 @section('content')
 <div class="card">
     <div class="card-body">
-        <div class="row justify-content-end">
+        <div class="row justify-content-between">
+            <div class="col-md-4">
+                <a href="{{ route('artikel.create') }}" class="btn btn-success">Tambah Data</a>
+            </div>
             <div class="col-md-4">
                 <form action="{{ route('artikel.index') }}?q=">
                     <input type="text" class="form-control" placeholder="Cari Artikel" name="q" value="{{ $q }}">

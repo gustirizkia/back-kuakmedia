@@ -8,6 +8,7 @@ use App\Models\Keresahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use DB;
 
 class ArticleController extends Controller
 {
@@ -99,18 +100,85 @@ class ArticleController extends Controller
             ], 422);
         }
 
-        $data = Article::with('komentar.user', 'penulis')->where('slug', $request->slug)->first();
+        $data = Article::with('kategori', 'penulis')
+        ->withCount('like as jumlah_like')
+        ->withSum('view as jumlah_view', 'jumlah')->where('slug', $request->slug)->first();
+
+        // dd($data->id);
+
+        // jumlah artikel
+        $jumlahView = DB::table('lihat_artikels')->where('article_id', $data->id)->first();
+        if($jumlahView){
+            $total = $jumlahView->jumlah+1;
+            $updateJumlah = DB::table('lihat_artikels')->where('article_id', $data->id)->update([
+                'jumlah' => $total
+            ]);
+        }else{
+            $total = 1;
+            $insert = DB::table('lihat_artikels')->insertGetId([
+                'jumlah' => $total,
+                'article_id' => $data->id
+            ]);
+        }
+
+        $data = Article::with('kategori', 'penulis')
+        ->withCount('like as jumlah_like')
+        ->withSum('view as jumlah_view', 'jumlah')->where('slug', $request->slug)->first();
 
         return response()->json([
             'status' => 'success',
-            'data' => $data
+            'data' => $data,
+            'sudah_like' => false
+        ]);
+    }
+    public function detailAuth(Request $request){
+        $validasi = Validator::make($request->all(), [
+            'slug' => 'required|exists:articles,slug'
+        ]);
+
+        if($validasi->fails())
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validasi->errors()
+            ], 422);
+        }
+
+        $data = Article::with('kategori', 'penulis')
+        ->withCount('like as jumlah_like')
+        ->withSum('view as jumlah_view', 'jumlah')->where('slug', $request->slug)->first();
+
+        // jumlah artikel
+        $jumlahView = DB::table('lihat_artikels')->where('article_id', $data->id)->first();
+        $total = $jumlahView->jumlah + 1;
+
+        $updateJumlah = DB::table('lihat_artikels')->where('article_id', $data->id)->update([
+            'jumlah' => $total
+        ]);
+
+        $data = Article::with('kategori', 'penulis')
+        ->withCount('like as jumlah_like')
+        ->withSum('view as jumlah_view', 'jumlah')->where('slug', $request->slug)->first();
+
+        if(auth()->user()){
+            // cek like
+            $cekLike = DB::table('like_users')->where('user_id', auth()->user()->id)->where('article_id', $data->id)->exists();
+        }else{
+            $cekKomen = false;
+            $cekLike = false;
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+            'sudah_like' => $cekLike
         ]);
     }
 
     public function create(Request $request){
         $validasi = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,id',
-            'image' => 'image|required|max:50000',
+            'image' => 'image|required|max:5240', // satu mb
             'judul' => 'required|string',
             'body' => 'required'
         ]);
@@ -123,7 +191,7 @@ class ArticleController extends Controller
 
         $image = $request->file('image')->store('artikel/image', 'public');
         $data = $request->all();
-        $data['image'] = $image;
+        $data['image'] = env('APP_URL').'storage/'.$image;
         $data['user_id'] = auth()->user()->id;
         // $data['slug'] = Str::slug($request->judul, '-');
 
@@ -160,7 +228,6 @@ class ArticleController extends Controller
 
         $data = Article::whereIn('id', $rekomendasi)
             ->with('kategori', 'penulis')
-            // ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
             ->withCount('like as jumlah_like')
             ->withSum('view as jumlah_view', 'jumlah')
             ->where('publish', 'yes')
@@ -171,4 +238,33 @@ class ArticleController extends Controller
             'data' => $data
         ]);
     }
+
+    public function share(Request $request){
+        $platform = $request->platform;
+
+        $data = DB::table('share_articles')->where('article_id', $request->artikel_id)->where('platform', $platform)->first();
+        if($data){
+            $total = $data->jumlah+1;
+            $update = DB::table('share_articles')->where('id', $data->id)->update([
+                'jumlah' => $total
+            ]);
+        }else{
+            $insert = DB::table('share_articles')->insertGetId([
+                'article_id' => $request->artikel_id,
+                'jumlah' => 1,
+                'platform' => $platform,
+                'created_at' => now()
+            ]);
+        }
+
+        $data = DB::table('share_articles')->where('article_id', $request->artikel_id)->where('platform', $platform)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ]);
+    }
+
+    
+
 }

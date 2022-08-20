@@ -23,6 +23,10 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'bio',
+        'image',
+        'roles',
+        'job_title'
     ];
 
     /**
@@ -35,12 +39,16 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
-    protected $appends = ['total_blog'];
+    protected $appends = ['total_blog', 'image_url'];
 
     public function getTotalBlogAttribute(){
       $data = DB::table('articles')->where('user_id', $this->id)->count();
 
       return $data;
+    }
+
+    public function getImageUrlAttribute(){
+        return env("APP_URL")."storage/$this->image";
     }
 
     /**
@@ -58,6 +66,10 @@ class User extends Authenticatable implements JWTSubject
 
     public function artikel(){
       return $this->hasMany('App\Models\Article');
+    }
+
+    public function pengikut(){
+        return $this->hasMany('App\Models\Pengikut');
     }
 
 /**

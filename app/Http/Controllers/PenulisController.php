@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\User;
 use App\Models\Article;
+use App\Models\Pengikut;
 
 class PenulisController extends Controller
 {
@@ -50,7 +51,7 @@ class PenulisController extends Controller
 
     public function detailPenulis(Request $request){
       $rules = \Validator::make($request->all(), [
-        'user_id' => 'required|integer|exists:users,id'
+        'penulis_id' => 'required|integer|exists:users,id'
       ]);
 
       if($rules->fails()){
@@ -60,8 +61,8 @@ class PenulisController extends Controller
         ], 422);
       }
 
-        $penulis = User::find($request->user_id);
-        $artikelSaya =  Article::where('user_id', $request->user_id)
+        $penulis = User::find($request->penulis_id);
+        $artikelSaya =  Article::where('user_id', $request->penulis_id)
             ->with('kategori', 'penulis')
             // ->select('id', 'judul', 'image', 'user_id', 'category_id', 'updated_at as tanggal_dipublish')
             ->withCount('like as jumlah_like')
@@ -69,10 +70,23 @@ class PenulisController extends Controller
             ->where('publish', 'yes')
             ->get();
 
+        if($request->id_user_login){
+          $isExists = Pengikut::where('user_id', $request->id_user_login)->where('penulis_id', $request->penulis_id)->exists();
+          if ($isExists) {
+            $sudah_follow = true;
+          }else{
+            $sudah_follow = false;
+          }
+        }else{
+          $sudah_follow = false;
+        }
+
+
           return response()->json([
             'status' => 'success',
             'penulis' => $penulis,
-            'artikel_penulis' => $artikelSaya
+            'artikel_penulis' => $artikelSaya,
+            'mengikuti' => $sudah_follow
           ]);
     }
 
@@ -91,6 +105,22 @@ class PenulisController extends Controller
       // ->select('name', 'users.image as user_image')
       ->limit(16)
       ->get();
+
+      return response()->json([
+        'status' => 'success',
+        'data' => $data
+      ]);
+    }
+
+    public function getAll(Request $request){
+      if($request->limit){
+        $limit = $request->limit;
+      }else{
+        $limit = 12;
+      }
+
+      $data = User::with('artikel')->has('artikel')
+      ->limit($limit)->get();
 
       return response()->json([
         'status' => 'success',

@@ -27,6 +27,11 @@ class ArtikelModel extends Model
         ];
     }
 
+    public function sluggableEvent(): string
+    {
+        return SluggableObserver::SAVED;
+    }
+
 
     protected $guarded = [];
 

@@ -35,12 +35,18 @@ Route::get('kategori', [CategoryController::class, 'list']);
 
 Route::get('artikel', [ArticleController::class, 'list']);
 Route::get('artikel/detail', [ArticleController::class, 'detail']);
+Route::get('artikel/detail-auth', [ArticleController::class, 'detailAuth'])->middleware('auth:api');
 Route::post('artikel/create', [ArticleController::class, 'create'])->middleware('auth:api');
 Route::get('artikel/like', [LikeController::class, 'likeArticle'])->middleware('auth:api');
 Route::get('artikel/terbaru', [ArticleController::class, 'terbaru']);
 Route::get('artikel/rekomendasi', [ArticleController::class, 'rekomendasi']);
 Route::get('artikel/saya', [ArticleController::class, 'artikelSaya'])->middleware('auth:api');
 Route::get('artikel/keresahaan', [ArticleController::class, 'artikelKeresahan']);
+Route::post('user/artikel/like', [UserController::class, 'likeArtikel'])->middleware('auth:api');
+Route::post('artikel/share', [ArticleController::class, 'share']);
+
+Route::post('user/follow', [UserController::class, 'follow'])->middleware('auth:api');
+Route::post('user/komen', [UserController::class, 'komen'])->middleware('auth:api');
 
 Route::get('sekutu/terbaru', [PenulisController::class, 'sekutuTerbaru']);
 Route::get('sekutu/produktif', [PenulisController::class, 'palingProduktif']);
@@ -49,3 +55,4 @@ Route::get('sekutu/detail', [PenulisController::class, 'detailPenulis']);
 
 Route::get('penulis/terbaru', [PenulisController::class, 'penulsiTerbaru']);
 Route::get('penulis/produktif', [PenulisController::class, 'penulisProduktif']);
+Route::get('penulis/all', [PenulisController::class, 'getAll']);

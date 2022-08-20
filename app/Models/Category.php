@@ -14,4 +14,8 @@ class Category extends Model
     public function sub(){
         return $this->hasMany('App\Models\Category', 'sub_judul');
     }
+
+    public function artikel(){
+        return $this->hasMany("App\Models\Article", 'category_id');
+    }
 }
